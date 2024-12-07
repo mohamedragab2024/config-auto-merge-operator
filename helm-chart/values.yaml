@@ -28,3 +28,8 @@ resources:
 nodeSelector: {}
 tolerations: []
 affinity: {} 
+
+serviceMonitor:
+  enabled: false
+  interval: 30s
+  additionalLabels: {}
