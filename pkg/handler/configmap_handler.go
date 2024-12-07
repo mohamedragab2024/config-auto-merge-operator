@@ -2,15 +2,14 @@ package handler
 
 import (
 	"context"
-	"time"
 
 	"github.com/sirupsen/logrus"
 	corev1 "k8s.io/api/core/v1"
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"k8s.io/client-go/kubernetes"
 
-	"github.com/mohamedragab2024/config-auto-merge-operator/pkg/utils"
 	"github.com/mohamedragab2024/config-auto-merge-operator/pkg/metrics"
+	"github.com/mohamedragab2024/config-auto-merge-operator/pkg/utils"
 	"github.com/prometheus/client_golang/prometheus"
 )
 
@@ -66,11 +65,11 @@ func (h *ConfigMapHandler) HandleConfigMapChange(configMap *corev1.ConfigMap) {
 	if err != nil {
 		// Create if not exists
 		_, err = h.clientset.CoreV1().ConfigMaps(configMap.Namespace).Create(context.TODO(), targetCM, metav1.CreateOptions{})
-		metrics.ConfigMapOperations.WithLabelValues("create", err != nil ? "error" : "success").Inc()
+		metrics.ConfigMapOperations.WithLabelValues("create", getLabel(err)).Inc()
 	} else {
 		// Update if exists
 		_, err = h.clientset.CoreV1().ConfigMaps(configMap.Namespace).Update(context.TODO(), targetCM, metav1.UpdateOptions{})
-		metrics.ConfigMapOperations.WithLabelValues("update", err != nil ? "error" : "success").Inc()
+		metrics.ConfigMapOperations.WithLabelValues("update", getLabel(err)).Inc()
 	}
 
 	if err != nil {
@@ -107,4 +106,11 @@ func (h *ConfigMapHandler) HandleConfigMapDeletion(configMap *corev1.ConfigMap) 
 	if err != nil {
 		logrus.Errorf("Error updating target configmap: %v", err)
 	}
+}
+
+func getLabel(err error) string {
+	if err == nil {
+		return "success"
+	}
+	return "error"
 }
