@@ -1,0 +1,5 @@
+apiVersion: v2
+name: configmap-operator
+description: A Kubernetes operator for merging ConfigMaps
+version: 0.1.0
+appVersion: "1.0.0" 

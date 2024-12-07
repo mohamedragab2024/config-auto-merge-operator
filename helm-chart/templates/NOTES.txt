@@ -1,0 +1,19 @@
+Thank you for installing {{ .Chart.Name }}.
+
+The operator has been deployed to your cluster. It will watch for ConfigMaps with the annotation:
+  config-merger.k8s.io/watch: "true"
+
+To specify the target ConfigMap for merging, add the annotation:
+  config-merger.k8s.io/target: "target-configmap-name"
+
+Example ConfigMap:
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: example-config
+  annotations:
+    config-merger.k8s.io/watch: "true"
+    config-merger.k8s.io/target: "merged-config"
+data:
+  key1: value1 
